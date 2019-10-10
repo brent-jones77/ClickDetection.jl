@@ -1,0 +1,13 @@
+name = "ClickDetection"
+uuid = "1d0e0bdb-1e15-44b3-9fc9-1c6ed24568e3"
+authors = ["Sam Urmy"]
+version = "0.1.0"
+
+[compat]
+julia = "1"
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Test"]
