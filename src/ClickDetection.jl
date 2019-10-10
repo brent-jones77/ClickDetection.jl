@@ -114,15 +114,6 @@ function get_background(click::ClickPointer, width)
     return background
 end
 
-function zero_crossings(x)
-    n = 0
-    for i in 2:length(x)
-        if sign(x[i-1]) != sign(x[i])
-            n += 1
-        end
-    end
-    return n
-end
 
 function peak_lead_ratio(click::ClickPointer, nsamples_lead)
     t, x = get_data(click)
