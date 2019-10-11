@@ -2,12 +2,10 @@ module ClickDetection
 
 using AxisArrays
 using IntervalSets
-using DSP
+# using DSP
 using FileIO
-import LibSndFile
-import SampledSignals
-import DataFrames
-using Dates
+using LibSndFile
+using SampledSignals
 using Statistics
 
 include("detector.jl")
