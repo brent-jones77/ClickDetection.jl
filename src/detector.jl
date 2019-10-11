@@ -59,14 +59,28 @@ function merge_intervals(ints::Vector{I}, sort_first=true) where {I <: ClosedInt
     return merged_intervals
 end
 
-function detect_clicks(x, thresh, span)
+"""
+Detect clicks in a
+"""
+function detect_clicks(x::AbstractVector, times::AbstractVector, thresh, span)
     x_teager = teager(x)
-    times = axisvalues(x[Axis{:time}])[1]
-    t0, t1 = times[1], times[end]
     high_teager_idx = findall(x -> x > thresh, x_teager)
     intervals = [max(t0, times[i]-span)..min(times[i]+span, t1) for i in high_teager_idx]
     intervals = merge_intervals(intervals)
     return [ClickPointer(x, i, thresh) for i in intervals]
+end
+
+function detect_clicks(x::AxisArray, thresh, span)
+    times = axisvalues(x[Axis{:time}])[1]
+    t0, t1 = times[1], times[end]
+    detect_clicks(x, times, thresh, span)
+end
+
+function detect_clicks(x::SampleBuf, thresh, span)
+    nchannels(x) == 1 && ArgumentError("The SampleBuff cannot have more than one channel.")
+    times = domain(x)
+    t0, t1 = times[1], times[end]
+    detect_clicks(x, times, thresh, span)
 end
 
 
