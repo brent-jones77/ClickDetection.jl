@@ -10,6 +10,16 @@ function read_as_axisarray(stream::LibSndFile.SndFileSource, seconds)
 end
 
 function read_as_axisarray(stream::LibSndFile.SndFileSource)
+    return read_as_axisarray(stream, seconds)
+end
+
+function read_as_axisarray(wavfile::AbstractString)
+    stream = loadstreaming(wavfile)
     seconds = SampledSignals.nframes(stream) / SampledSignals.samplerate(stream)
+    return read_as_axisarray(stream, seconds)
+end
+
+function read_as_axisarray(wavfile::AbstractString, seconds)
+    stream = loadstreaming(wavfile)
     return read_as_axisarray(stream, seconds)
 end
