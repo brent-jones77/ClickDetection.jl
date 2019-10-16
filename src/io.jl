@@ -1,25 +1,10 @@
 
-function read_as_axisarray(stream::LibSndFile.SndFileSource, seconds)
-    s = SampledSignals.s
-    Fs = SampledSignals.samplerate(stream)
-    x = read(stream, seconds * s)
-    tt = SampledSignals.domain(x)
-    x = convert.(Float32, vec(x.data))
-    x = AxisArray(x, Axis{:time}(tt))
-    return x
-end
 
-function read_as_axisarray(stream::LibSndFile.SndFileSource)
-    return read_as_axisarray(stream, seconds)
-end
-
-function read_as_axisarray(wavfile::AbstractString)
-    stream = loadstreaming(wavfile)
-    seconds = SampledSignals.nframes(stream) / SampledSignals.samplerate(stream)
-    return read_as_axisarray(stream, seconds)
-end
-
-function read_as_axisarray(wavfile::AbstractString, seconds)
-    stream = loadstreaming(wavfile)
-    return read_as_axisarray(stream, seconds)
+function as_dataframe(clicks::Vector{T}, starttime, wavfile) where {T<:AbstractClick}
+    df = DataFrame(
+        (wavfile=wavfile,
+        start=starttime+Dates.Millisecond(round(left(c) * 1e3)),
+        stop=Dates.Millisecond(round(right(c) * 1e3)),
+        waveform=samples(c)) for c in clicks)
+    return df
 end
