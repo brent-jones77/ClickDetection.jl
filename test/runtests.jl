@@ -14,19 +14,19 @@ using Test
 end
 
 @testset "Detection" begin
-    wavfile = joinpath(@__DIR__, "data", "MARS_20180401_001914.wav")
-    x = read(loadstreaming(wavfile), 50_000_000)
-    x = convert.(Float32, x)
+    wavfile = joinpath(@__DIR__, "data", "MARS_20180201_131212_clip.wav")
+    audio = loadstreaming(wavfile)
+    x = read(audio)
+    close(audio)
 
+    # preprocess raw audio before click detection
+    x = convert.(Float32, x)
     fs = samplerate(x)
     butter = digitalfilter(Highpass(5e3, fs=fs), Butterworth(3))
     x = filtfilt(butter, x)
-    x_teager = teager(x)
 
-    noise_pct = 0.6
-    noise_factor = 30
-    noise_floor = quantile(vec(x_teager), noise_pct)
-    thresh = noise_floor * noise_factor
+    # Actual click detection
+    thresh = 1e-5
     window = 1e-3
     clicks1 = detect_clicks(x, thresh, window)
     @test series(clicks1[1]) === series(clicks1[2])
