@@ -31,7 +31,14 @@ times(c::Click) = left(c):(1/samplerate(c)):right(c)
 """
     teager(x::AbstractArray)
 
-Calculate the Teager energy operator of a
+Calculate the Teager energy operator of a sampled signal `x`, in the form of a
+`Vector` or n x 1 `Array`.  The Teager energy at sample \$x_i\$ is defined as
+
+```math
+x_i^2 - x_{i-1} x_{i+1},
+```
+
+so `x` must be at least 3 samples long.
 """
 function teager(x::AbstractArray)
     @assert length(x) >= 3 "Not enough measurements to compute Teager energy"
@@ -83,6 +90,12 @@ end
 Detect clicks in a sampled signal using the Teager energy operator. `x` can be an
 `AbstractArray` or `AbstractSampleBuf` (from SampledSignals.jl).  If it is the
 former, a samplerate must be supplied as well.
+
+`thresh` is the detection threshold for the Teager energy.  `span` is the time
+before and after each sample above the Teager threshold to include in the click.
+The duration of the shortest click will therefore be `2 * thresh`.
+
+Returns a `Vector{ClickPointer}`.
 """
 function detect_clicks(x::AbstractArray{T,N}, samplerate, thresh, span)  where {T, N}
     y = SampleBuf(Array(x), samplerate)
@@ -100,9 +113,9 @@ function detect_clicks(x::AbstractSampleBuf{T,N}, thresh, span) where {T, N}
     intervals = merge_intervals(intervals)
     return [ClickPointer(x, i, thresh) for i in intervals]
 end
-
-function peak_lead_ratio(click::ClickPointer, nsamples_lead)
-    t, x = get_data(click)
-    x² = abs2.(x)
-    return mean(x²[nsamples_lead:end]) / mean(x²[1:nsamples_lead])
-end
+#
+# function peak_lead_ratio(click::ClickPointer, nsamples_lead)
+#     t, x = get_data(click)
+#     x² = abs2.(x)
+#     return mean(x²[nsamples_lead:end]) / mean(x²[1:nsamples_lead])
+# end
