@@ -57,6 +57,13 @@ end
     @test samplerate(first(clicks2)) == samplerate(first(clicks1))
     @test times(first(clicks1)) == times(first(clicks2))
 
+    df = as_dataframe(clicks1)
+    @test size(df,1) == length(clicks1)
+    df = as_dataframe(clicks1, DateTime(2019,1,1,0,0,0))
+    @test size(df,1) == length(clicks1)
     df = as_dataframe(clicks1, DateTime(2019,1,1,0,0,0), "fakefile.wav")
+    @test size(df,1) == length(clicks1)
+    fakefiles = string.(1:length(clicks1))
+    df = as_dataframe(clicks1, DateTime(2019,1,1,0,0,0), fakefiles)
     @test size(df,1) == length(clicks1)
 end
