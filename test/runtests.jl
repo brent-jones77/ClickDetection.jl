@@ -54,6 +54,7 @@ end
     @test left(first(clicks1)) == left(first(clicks2))
     @test right(first(clicks1)) == right(first(clicks2))
     @test samplerate(first(clicks1)) == samplerate(first(clicks2))
+    @test samplerate(first(clicks2)) == samplerate(first(clicks1))
     @test times(first(clicks1)) == times(first(clicks2))
 
     df = as_dataframe(clicks1, DateTime(2019,1,1,0,0,0), "fakefile.wav")
