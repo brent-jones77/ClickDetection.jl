@@ -13,8 +13,8 @@ source file for the clicks can be included via th optional argument `wavfile`
 """
 function as_dataframe(clicks::Vector{T}, starttime::DateTime) where {T<:AbstractClick}
     df = DataFrame(
-        (start=starttime+Dates.Millisecond(round(left(c) * 1e3)),
-        stop=Dates.Millisecond(round(right(c) * 1e3)),
+        (start=starttime + Dates.Millisecond(round(left(c) * 1e3)),
+        stop=starttime + Dates.Millisecond(round(right(c) * 1e3)),
         waveform=samples(c)) for c in clicks)
     return df
 end
