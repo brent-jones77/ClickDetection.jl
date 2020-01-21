@@ -11,7 +11,7 @@ interval(c::ClickPointer) = c.interval
 left(c::ClickPointer) = interval(c).left
 right(c::ClickPointer) = interval(c).right
 SampledSignals.samplerate(c::ClickPointer) = samplerate(series(c))
-samples(c::ClickPointer) = series(c)[left(c)*s..right(c)*s]
+samples(c::ClickPointer) = Array(series(c)[left(c)*s..right(c)*s])
 times(c::ClickPointer) = left(c):(1/samplerate(c)):right(c)
 
 struct Click{T,N} <: AbstractClick{T,N}

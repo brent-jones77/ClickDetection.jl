@@ -49,6 +49,7 @@ end
     clicks2 = detect_clicks(Array(x), samplerate(x), thresh, window)
     @test series(first(clicks1)) !== series(first(clicks2))
     @test length(clicks1) == length(clicks2)
+    @test typeof(samples(first(clicks1))) <: Array
     @test all(samples(first(clicks1)) .== samples(first(clicks2)))
     @test interval(first(clicks1)) == interval(first(clicks2))
     @test left(first(clicks1)) == left(first(clicks2))
