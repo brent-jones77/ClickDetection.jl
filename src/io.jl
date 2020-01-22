@@ -18,12 +18,16 @@ function as_dataframe(clicks::Vector{T}, starttime::DateTime) where {T<:Abstract
          stop=right(c),
          start_datetime=starttime + Dates.Millisecond(round(left(c) * 1e3)),
          stop_datetime=starttime + Dates.Millisecond(round(right(c) * 1e3)),
+         samplerate=samplerate(c),
          waveform=samples(c)) for c in clicks)
     return df
 end
 
 function as_dataframe(clicks::Vector{T}) where {T<:AbstractClick}
-    df = DataFrame((start=left(c), stop=right(c), waveform=samples(c)) for c in clicks)
+    df = DataFrame((start=left(c),
+                    stop=right(c),
+                    samplerate=samplerate(c),
+                    waveform=samples(c)) for c in clicks)
     return df
 end
 

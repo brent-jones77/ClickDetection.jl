@@ -58,13 +58,19 @@ end
     @test samplerate(first(clicks2)) == samplerate(first(clicks1))
     @test times(first(clicks1)) == times(first(clicks2))
 
+    required_colnames = [:start, :stop, :samplerate, :waveform]
+
     df = as_dataframe(clicks1)
+    @test all(in(names(df)).(required_colnames))
     @test size(df,1) == length(clicks1)
     df = as_dataframe(clicks1, DateTime(2019,1,1,0,0,0))
     @test size(df,1) == length(clicks1)
+    @test all(in(names(df)).([required_colnames; :start_datetime; :stop_datetime]))
     df = as_dataframe(clicks1, DateTime(2019,1,1,0,0,0), "fakefile.wav")
+    @test all(in(names(df)).([required_colnames; :start_datetime; :stop_datetime; :wavfile]))
     @test size(df,1) == length(clicks1)
     fakefiles = string.(1:length(clicks1))
     df = as_dataframe(clicks1, DateTime(2019,1,1,0,0,0), fakefiles)
+    @test all(in(names(df)).([required_colnames; :start_datetime; :stop_datetime; :wavfile]))
     @test size(df,1) == length(clicks1)
 end
