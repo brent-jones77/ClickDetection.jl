@@ -1,6 +1,6 @@
 module ClickDetection
 
-using AxisArrays
+# using AxisArrays
 using IntervalSets
 using FileIO
 using LibSndFile
